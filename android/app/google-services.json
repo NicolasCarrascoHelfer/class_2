@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "628863661704",
+    "project_id": "ecommerce-4042f",
+    "storage_bucket": "ecommerce-4042f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628863661704:android:816c952974194c289b113d",
+        "android_client_info": {
+          "package_name": "com.example.practica_2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3pXLwa61MTKEvqTCiF11NBf4cgBxxEoI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

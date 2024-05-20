@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:practica_2/model/product_model.dart';
+import 'package:practica_2/service/product_service.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -9,8 +12,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Product> products = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getInitialValues();
+  }
+
+  _getInitialValues() async {
+    products = await ProductService().getMyProductList();
+    setState(() {
+      products;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const CupertinoSearchTextField(),
@@ -57,7 +77,22 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 20,
             ),
-            const ItemWidget()
+            products.isNotEmpty
+                ? Expanded(
+                    child: GridView.builder(
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        Product preview = products[index];
+                        return ItemWidget(item: preview);
+                      },
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: size.width * 0.5,
+                          childAspectRatio: 1.5 / 2,
+                          crossAxisSpacing: 20,
+                          mainAxisSpacing: 20),
+                    ),
+                  )
+                : const SizedBox()
           ],
         ),
       ),
@@ -68,7 +103,9 @@ class _HomeScreenState extends State<HomeScreen> {
 class ItemWidget extends StatelessWidget {
   const ItemWidget({
     super.key,
+    required this.item,
   });
+  final Product item;
 
   @override
   Widget build(BuildContext context) {
@@ -86,27 +123,29 @@ class ItemWidget extends StatelessWidget {
           Expanded(
               child: Stack(
             children: [
-              Image.asset(
-                "assets/jacket.png",
+              Image.network(
+                item.image,
                 fit: BoxFit.fitWidth,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.red.withOpacity(0.2)),
-                    padding: const EdgeInsets.all(5),
-                    margin: const EdgeInsets.all(5),
-                    child: Text(
-                      "-30%",
-                      style: TextStyle(
-                          color: Colors.red[900],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
+                  item.discount
+                      ? Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.red.withOpacity(0.2)),
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.all(5),
+                          child: Text(
+                            "-30%",
+                            style: TextStyle(
+                                color: Colors.red[900],
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        )
+                      : const SizedBox(),
                   Container(
                     margin: const EdgeInsets.all(5),
                     child: const Icon(
@@ -128,24 +167,24 @@ class ItemWidget extends StatelessWidget {
               color: Colors.white,
             ),
             padding: const EdgeInsets.all(10),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Balenciaga",
-                  style: TextStyle(
+                  item.brand,
+                  style: const TextStyle(
                       fontWeight: FontWeight.w600, color: Colors.grey),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Shrunk Puffer B"),
+                    Text(item.name),
                     Text(
-                      "S/.300",
-                      style: TextStyle(fontWeight: FontWeight.w700),
+                      "S/.${item.price}",
+                      style: const TextStyle(fontWeight: FontWeight.w700),
                     )
                   ],
                 )
