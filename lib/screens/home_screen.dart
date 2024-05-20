@@ -123,9 +123,11 @@ class ItemWidget extends StatelessWidget {
           Expanded(
               child: Stack(
             children: [
-              Image.network(
-                item.image,
-                fit: BoxFit.fitWidth,
+              Center(
+                child: Image.network(
+                  item.image,
+                  fit: BoxFit.fitWidth,
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
